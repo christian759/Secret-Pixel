@@ -1,7 +1,6 @@
 package com.example.secretpixel.navsystem
 
 import androidx.compose.runtime.*
-import androidx.compose.runtime.internal.composableLambda
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
