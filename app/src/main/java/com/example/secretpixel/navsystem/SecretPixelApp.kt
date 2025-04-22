@@ -16,11 +16,12 @@ fun SecretPixelApp() {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = "home"){
-        composable("home"){ homeScreen() }
+        composable("home"){ homeScreen(navController) }
         composable("hide_file") { hideFile() }
         composable("extract_file") { extractFile() }
         composable("hide_text") { hideText() }
         composable("extract_text") { extractText() }
         composable("settings") { settingsPage() }
+        composable("info") { infoPage() }
     }
 }
