@@ -1,7 +1,6 @@
 package com.example.secretpixel.ui.screens
 
 import android.net.Uri
-import android.widget.ImageButton
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
@@ -13,7 +12,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -78,7 +76,7 @@ fun hideFile(navController: NavController) {
                 onClick = { pickFile.launch("*/*") }
             )
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(30.dp))
 
             // Output name field
             OutlinedTextField(
@@ -101,20 +99,27 @@ fun hideFile(navController: NavController) {
                 )
             )
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(30.dp))
 
-            Button(
-                modifier =  Modifier.width(120.dp).height(60.dp),
-                border = BorderStroke(5.dp, Color.White.copy(alpha = 0.25f)),
-                elevation = ButtonDefaults.buttonElevation(10.dp, 12.dp),
+            OutlinedButton(
+                modifier = Modifier.height(50.dp).width(120.dp),
+                shape = RoundedCornerShape(10.dp),
+                border = BorderStroke(2.dp, Color.White.copy(alpha = 0.25f)),
+                elevation = ButtonDefaults.buttonElevation(6.dp, 2.dp),
                 colors = ButtonColors(containerColor = colorScheme.cardColor, contentColor = Color.Unspecified,
                     disabledContentColor = Color.Unspecified, disabledContainerColor = Color.Unspecified),
-               onClick =  {}
+               onClick =  {
+
+               }
             ) {
-                Image(
-                    painter = painterResource(R.drawable.hidefile2), "hide file button",
+                Box(
                     modifier = Modifier.fillMaxSize()
-                )
+                ) {
+                    Image(
+                        painter = painterResource(R.drawable.hidefile2__2_), "hide file button",
+                        modifier = Modifier.matchParentSize()
+                    )
+                }
             }
 
             Spacer(Modifier.weight(1f))
