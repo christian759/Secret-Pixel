@@ -27,20 +27,8 @@ object ThemeManager{
     }
 }
 
-val LightTheme = lightColorScheme(
-    primary = Color(0xFF006874),
-    onPrimary = Color.White,
-    background = Color(0xFFF6F6F6),
-    onBackground = Color.Black,
-    surface = Color.White,
-    onSurface = Color.Black,
-)
+data class ColorTheme(val backgroundColor: Color, val textColor: Color, val cardColor: Color)
 
-val DarkColors = darkColorScheme(
-    primary = Color(0xFF4DD0E1),
-    onPrimary = Color.Black,
-    background = Color(0xFF121212),
-    onBackground = Color.White,
-    surface = Color(0xFF1E1E1E),
-    onSurface = Color.White,
-)
+val colorScheme: ColorTheme = ColorTheme(backgroundColor = Color(0xFFC7CACA),
+    textColor = Color(0xFF1B1B1B),
+   cardColor = Color(0xFFA3ADAD))

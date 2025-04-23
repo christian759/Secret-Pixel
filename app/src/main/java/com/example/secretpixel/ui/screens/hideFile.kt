@@ -75,14 +75,14 @@ fun OpenFile(
 ) {
     Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick),
+            .fillMaxWidth(),
         elevation = CardDefaults.cardElevation(4.dp),
         shape = RoundedCornerShape(12.dp)
     ) {
         Row(
             modifier = Modifier
-                .padding(16.dp),
+                .padding(16.dp)
+                .clickable(onClick = onClick),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
