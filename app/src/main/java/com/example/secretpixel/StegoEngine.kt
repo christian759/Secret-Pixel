@@ -13,7 +13,8 @@ import javax.crypto.spec.SecretKeySpec
 
 
 object StegoEngine {
-    fun hideFile(context: Context, imageUri: Uri, fileUri: Uri, outputName: String, encrypt: Boolean, key: String) {
+
+    fun hideFile(context: Context, imageUri: Uri, fileUri: Uri, outputName: String, key: String?) {
         // reading the image
         val imageInputStream: InputStream? = context.contentResolver.openInputStream(imageUri)
         val bitmap: Bitmap? = BitmapFactory.decodeStream(imageInputStream)
@@ -23,7 +24,7 @@ object StegoEngine {
         var fileData: ByteArray? = fileInputStream?.readBytes()
 
         // encryption
-        if (encrypt && fileData != null) {
+        if (key != null && fileData != null) {
             fileData = encryptData(fileData, key)
         }
 
@@ -53,7 +54,7 @@ object StegoEngine {
                     outputStream.write(combinedData)
                 }
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             Handler(Looper.getMainLooper()).post {
                 Toast.makeText(context, "Error hiding content", Toast.LENGTH_SHORT).show()
             }
@@ -61,8 +62,8 @@ object StegoEngine {
     }
 
     // AES encryption with proper key length
-    fun encryptData(data: ByteArray, key: String): ByteArray {
-        val key = key.toByteArray(Charsets.UTF_8) // 16-byte key
+    fun encryptData(data: ByteArray, key: String?): ByteArray {
+        val key = key?.toByteArray(Charsets.UTF_8) // 16-byte key
         val secretKeySpec = SecretKeySpec(key, "AES")
         val cipher = Cipher.getInstance("AES/ECB/PKCS5Padding")
         cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec)
@@ -70,7 +71,7 @@ object StegoEngine {
     }
 
 
-    fun extractFile(context: Context, imageUri: Uri, key: String) {
+    fun extractFile(context: Context, imageUri: Uri, key: String?) {
         try {
             val inputStream = context.contentResolver.openInputStream(imageUri)
             val combinedData = inputStream?.readBytes()
@@ -151,12 +152,15 @@ object StegoEngine {
         }
     }
 
-    fun decryptData(data: ByteArray, key: String): ByteArray {
-        val key = key.toByteArray(Charsets.UTF_8) // Same 16-byte key
-        val secretKeySpec = SecretKeySpec(key, "AES")
-        val cipher = Cipher.getInstance("AES/ECB/PKCS5Padding")
-        cipher.init(Cipher.DECRYPT_MODE, secretKeySpec)
-        return cipher.doFinal(data)
+    fun decryptData(data: ByteArray, key: String?): ByteArray {
+        if (key != null) {
+            val key = key.toByteArray(Charsets.UTF_8) // Same 16-byte key
+            val secretKeySpec = SecretKeySpec(key, "AES")
+            val cipher = Cipher.getInstance("AES/ECB/PKCS5Padding")
+            cipher.init(Cipher.DECRYPT_MODE, secretKeySpec)
+            return cipher.doFinal(data)
+        }
+        return data
     }
 
 }
