@@ -98,7 +98,7 @@ fun FeatureCard(
             Image(
                 painter = painterResource(id = imageRes),
                 contentDescription = "feature icon",
-                modifier = Modifier.size(85.dp)
+                modifier = Modifier.size(90.dp)
             )
         }
     }

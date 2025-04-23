@@ -1,6 +1,7 @@
 package com.example.secretpixel.ui.screens
 
 import android.net.Uri
+import android.widget.ImageButton
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
@@ -12,6 +13,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -27,9 +29,7 @@ fun hideFile(navController: NavController) {
 
     var coverImageUri by remember { mutableStateOf<Uri?>(null) }
     var fileToHideUri by remember { mutableStateOf<Uri?>(null) }
-    var outputName by remember { mutableStateOf("") }
-    var encryptionEnabled by remember { mutableStateOf(false) }
-
+    var key by remember { mutableStateOf("") }
     val context = LocalContext.current
 
     val pickImage = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
@@ -82,8 +82,10 @@ fun hideFile(navController: NavController) {
 
             // Output name field
             OutlinedTextField(
-                value = outputName,
-                onValueChange = { outputName = it },
+                value = key,
+                onValueChange = { key = it },
+                maxLines = 4,
+                shape = RoundedCornerShape(10.dp),
                 label = { Text("Encryption key (Optional)") },
                 modifier = Modifier.fillMaxWidth(),
                 colors = TextFieldDefaults.colors(
@@ -98,6 +100,22 @@ fun hideFile(navController: NavController) {
                     unfocusedLabelColor = colorScheme.textColor.copy(alpha = 0.6f)
                 )
             )
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Button(
+                modifier =  Modifier.width(120.dp).height(60.dp),
+                border = BorderStroke(5.dp, Color.White.copy(alpha = 0.25f)),
+                elevation = ButtonDefaults.buttonElevation(10.dp, 12.dp),
+                colors = ButtonColors(containerColor = colorScheme.cardColor, contentColor = Color.Unspecified,
+                    disabledContentColor = Color.Unspecified, disabledContainerColor = Color.Unspecified),
+               onClick =  {}
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.hidefile2), "hide file button",
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
 
             Spacer(Modifier.weight(1f))
 
