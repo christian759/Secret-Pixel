@@ -1,98 +1,161 @@
 package com.example.secretpixel.ui.screens
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.*
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.automirrored.filled.ArrowRight
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.*
+import androidx.compose.ui.*
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.*
+import androidx.navigation.NavController
+import com.example.secretpixel.ui.colorScheme
 import com.example.secretpixel.R
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
-fun hideFile(){
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Image(
-                        painter = painterResource(id = R.drawable.secretpixel),
-                        contentDescription = "secret pixel",
-                        modifier = Modifier
-                            .height(32.dp)
-                            .padding(vertical = 4.dp)
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = {}) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowRight,
-                            contentDescription = "back button"
-                        )
-                    }
-                },
-            )
-        }
-    ) { padding ->
+fun hideFile(navController: NavController) {
+
+    var coverImageUri by remember { mutableStateOf<Uri?>(null) }
+    var fileToHideUri by remember { mutableStateOf<Uri?>(null) }
+    var outputName by remember { mutableStateOf("") }
+    var encryptionEnabled by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
+
+    val pickImage = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
+        it?.let { uri -> coverImageUri = uri }
+    }
+
+    val pickFile = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
+        it?.let { uri -> fileToHideUri = uri }
+    }
+
+    Box(modifier = Modifier.fillMaxSize()
+        .background(colorScheme.backgroundColor),) {
         Column(
             modifier = Modifier
-                .padding(padding)
-                .padding(16.dp)
+                .fillMaxSize()
+                .padding(30.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            OpenFile(
-                imageRes = R.drawable.imgselect,
-                text = "Select a cover image",
-                onClick = {}
+            Spacer(modifier = Modifier.height(40.dp))
+
+            Image(
+                painter = painterResource(R.drawable.hidefile2__2_), "secret pixel",
+                modifier = Modifier.width(200.dp)
             )
-            Spacer(modifier = Modifier.height(16.dp))
-            OpenFile(
-                imageRes = R.drawable.fileselect,
-                text = "Select a file to hide",
-                onClick = {}
+
+            Spacer(modifier = Modifier.height(40.dp))
+
+            // Image Picker
+            FilePickerCard(
+                title = R.drawable.selectimage,
+                buttonLabel = "Choose Cover Image",
+                fileName = coverImageUri?.lastPathSegment ?: "No file selected",
+                icon = Icons.Default.Image,
+                onClick = { pickImage.launch("image/*") }
+            )
+
+            Spacer(modifier = Modifier.height(30.dp))
+
+            // File Picker
+            FilePickerCard(
+                title = R.drawable.selectfile,
+                buttonLabel = "Choose File",
+                fileName = fileToHideUri?.lastPathSegment ?: "No file selected",
+                icon = Icons.Default.AttachFile,
+                onClick = { pickFile.launch("*/*") }
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // Output name field
+            OutlinedTextField(
+                value = outputName,
+                onValueChange = { outputName = it },
+                label = { Text("Encryption key (Optional)") },
+                modifier = Modifier.fillMaxWidth(),
+                colors = TextFieldDefaults.colors(
+                    focusedTextColor = colorScheme.textColor,
+                    unfocusedTextColor = colorScheme.textColor.copy(alpha = 0.8f),
+                    cursorColor = colorScheme.textColor,
+                    focusedContainerColor = colorScheme.cardColor.copy(alpha = 0.05f),
+                    unfocusedContainerColor = colorScheme.cardColor.copy(alpha = 0.02f),
+                    focusedIndicatorColor = colorScheme.cardColor,
+                    unfocusedIndicatorColor = colorScheme.cardColor.copy(alpha = 0.3f),
+                    focusedLabelColor = colorScheme.textColor,
+                    unfocusedLabelColor = colorScheme.textColor.copy(alpha = 0.6f)
+                )
+            )
+
+            Spacer(Modifier.weight(1f))
+
+        }
+
+
+        TextButton(
+            onClick = { navController.navigate("info") },
+            modifier = Modifier.align(Alignment.BottomCenter)
+                .padding(20.dp)
+        )
+        {
+            Icon(
+                Icons.Default.Info, contentDescription = "Info", tint = colorScheme.cardColor,
+                modifier = Modifier.padding(10.dp)
+            )
+            Text(
+                text = "Info",
+                color = colorScheme.textColor,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium
             )
         }
     }
 }
 
 @Composable
-fun OpenFile(
-    imageRes: Int,
-    text: String,
+fun FilePickerCard(
+    title: Int,
+    buttonLabel: String,
+    fileName: String,
+    icon: ImageVector,
     onClick: () -> Unit
 ) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(4.dp),
-        shape = RoundedCornerShape(12.dp)
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(20.dp),
+        elevation = CardDefaults.cardElevation(6.dp),
+        colors = CardDefaults.cardColors(containerColor = colorScheme.cardColor),
+        border = BorderStroke(2.dp, Color.White.copy(alpha = 0.25f))
     ) {
-        Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .clickable(onClick = onClick),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(
-                painter = painterResource(id = imageRes),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(40.dp)
-            )
-            Spacer(modifier = Modifier.width(12.dp))
-            Text(text = text, style = MaterialTheme.typography.bodyLarge)
+        Column(Modifier.padding(16.dp)) {
+            Image(painter = painterResource(title), contentDescription = "select image",
+                modifier = Modifier.width(200.dp))
+            Spacer(Modifier.height(5.dp))
+            Button(
+                onClick = onClick,
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.White.copy(alpha = 0.2f)
+                )
+            ) {
+                Icon(icon, contentDescription = null, tint = colorScheme.textColor)
+                Spacer(Modifier.width(6.dp))
+                Text(buttonLabel, color = colorScheme.textColor)
+            }
+            Spacer(Modifier.height(8.dp))
+            Text("Selected: $fileName", fontSize = 12.sp, color = colorScheme.textColor.copy(alpha = 0.7f))
         }
     }
 }

@@ -17,7 +17,7 @@ fun SecretPixelApp() {
 
     NavHost(navController = navController, startDestination = "home"){
         composable("home"){ homeScreen(navController) }
-        composable("hide_file") { hideFile() }
+        composable("hide_file") { hideFile(navController) }
         composable("extract_file") { extractFile() }
         composable("hide_text") { hideText() }
         composable("extract_text") { extractText() }
