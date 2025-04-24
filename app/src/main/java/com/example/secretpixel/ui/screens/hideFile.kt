@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.*
 import androidx.navigation.NavController
 import com.example.secretpixel.ui.colorScheme
 import com.example.secretpixel.R
+import com.example.secretpixel.StegoEngine
 
 
 @Composable
@@ -109,12 +110,10 @@ fun hideFile(navController: NavController) {
                 colors = ButtonColors(containerColor = colorScheme.cardColor, contentColor = Color.Unspecified,
                     disabledContentColor = Color.Unspecified, disabledContainerColor = Color.Unspecified),
                onClick =  {
-
+                    StegoEngine.hideFile(context, coverImageUri, fileToHideUri, key)
                }
             ) {
-                Box(
-                    modifier = Modifier.fillMaxSize()
-                ) {
+                Box(modifier = Modifier.fillMaxSize()) {
                     Image(
                         painter = painterResource(R.drawable.hidefile2__2_), "hide file button",
                         modifier = Modifier.matchParentSize()

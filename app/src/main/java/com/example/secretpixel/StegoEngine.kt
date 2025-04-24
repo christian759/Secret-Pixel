@@ -14,60 +14,73 @@ import javax.crypto.spec.SecretKeySpec
 
 object StegoEngine {
 
-    fun hideFile(context: Context, imageUri: Uri, fileUri: Uri, outputName: String, key: String?) {
-        // reading the image
-        val imageInputStream: InputStream? = context.contentResolver.openInputStream(imageUri)
-        val bitmap: Bitmap? = BitmapFactory.decodeStream(imageInputStream)
+    fun hideFile(context: Context, imageUri: Uri?, fileUri: Uri?, key: String?) {
+        if ((imageUri != null) && (fileUri != null)){
+            try {
+                // reading the image
+                val imageInputStream: InputStream? = context.contentResolver.openInputStream(imageUri)
+                val bitmap: Bitmap? = BitmapFactory.decodeStream(imageInputStream)
 
-        // reading the file
-        val fileInputStream: InputStream? = context.contentResolver.openInputStream(fileUri)
-        var fileData: ByteArray? = fileInputStream?.readBytes()
+                // reading the file
+                val fileInputStream: InputStream? = context.contentResolver.openInputStream(fileUri)
+                var fileData: ByteArray? = fileInputStream?.readBytes()
 
-        // encryption
-        if (key != null && fileData != null) {
-            fileData = encryptData(fileData, key)
-        }
-
-        val fileSizeBytes = ByteBuffer.allocate(8).putLong(fileData?.size?.toLong() ?: 0).array()
-        val byteArrayOutputStream = ByteArrayOutputStream()
-        bitmap?.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
-        val imageData = byteArrayOutputStream.toByteArray()
-
-        val combinedData = ByteArray(imageData.size + (fileData?.size ?: 0) + 8)
-        System.arraycopy(imageData, 0, combinedData, 0, imageData.size)
-        if (fileData != null) {
-            System.arraycopy(fileData, 0, combinedData, imageData.size, fileData.size)
-            System.arraycopy(fileSizeBytes, 0, combinedData, imageData.size + fileData.size, 8)
-        }
-
-        // saving the image
-        val values = ContentValues().apply {
-            put(MediaStore.Images.Media.DISPLAY_NAME, "$outputName.png")
-            put(MediaStore.Images.Media.MIME_TYPE, "image/png")
-            put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
-        }
-
-        val savedImageUri: Uri? = context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
-        try {
-            savedImageUri?.let {
-                context.contentResolver.openOutputStream(it)?.use { outputStream ->
-                    outputStream.write(combinedData)
+                // encryption
+                if ((key != null) && (fileData != null)) {
+                    fileData = encryptData(fileData, key)
                 }
+
+                val fileSizeBytes = ByteBuffer.allocate(8).putLong(fileData?.size?.toLong() ?: 0).array()
+                val byteArrayOutputStream = ByteArrayOutputStream()
+                bitmap?.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+                val imageData = byteArrayOutputStream.toByteArray()
+
+
+                val combinedData = ByteArray(imageData.size + (fileData?.size ?: 0) + 8)
+                System.arraycopy(imageData, 0, combinedData, 0, imageData.size)
+                if (fileData != null) {
+                    System.arraycopy(fileData, 0, combinedData, imageData.size, fileData.size)
+                    System.arraycopy(fileSizeBytes, 0, combinedData, imageData.size + fileData.size, 8)
+                }
+
+                // saving the image
+                val values = ContentValues().apply {
+                    put(MediaStore.Images.Media.DISPLAY_NAME, "love.png")
+                    put(MediaStore.Images.Media.MIME_TYPE, "image/png")
+                    put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+                }
+
+                val savedImageUri: Uri? =
+                    context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+                try {
+                    savedImageUri?.let {
+                        context.contentResolver.openOutputStream(it)?.use { outputStream ->
+                            outputStream.write(combinedData)
+                        }
+                    }
+                } catch (_: Exception) {
+                    Handler(Looper.getMainLooper()).post {
+                        Toast.makeText(context, "Error hiding content", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }catch (e: Exception){
+                Toast.makeText(context, "Error ${e.message}", Toast.LENGTH_SHORT).show()
             }
-        } catch (_: Exception) {
-            Handler(Looper.getMainLooper()).post {
-                Toast.makeText(context, "Error hiding content", Toast.LENGTH_SHORT).show()
-            }
+        }else{
+            Toast.makeText(context, "Please select a file and an image", Toast.LENGTH_SHORT).show()
         }
     }
 
     // AES encryption with proper key length
     fun encryptData(data: ByteArray, key: String?): ByteArray {
-        val key = key?.toByteArray(Charsets.UTF_8) // 16-byte key
-        val secretKeySpec = SecretKeySpec(key, "AES")
-        val cipher = Cipher.getInstance("AES/ECB/PKCS5Padding")
-        cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec)
-        return cipher.doFinal(data)
+        if (key != null) {
+            val key = key.toByteArray(Charsets.UTF_16).copyOf(16) // 16-byte key
+            val secretKeySpec = SecretKeySpec(key, "AES")
+            val cipher = Cipher.getInstance("AES/ECB/PKCS5Padding")
+            cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec)
+            return cipher.doFinal(data)
+        }
+        return data
     }
 
 
@@ -154,7 +167,7 @@ object StegoEngine {
 
     fun decryptData(data: ByteArray, key: String?): ByteArray {
         if (key != null) {
-            val key = key.toByteArray(Charsets.UTF_8) // Same 16-byte key
+            val key = key.toByteArray(Charsets.UTF_16).copyOf(16) // Same 16-byte key
             val secretKeySpec = SecretKeySpec(key, "AES")
             val cipher = Cipher.getInstance("AES/ECB/PKCS5Padding")
             cipher.init(Cipher.DECRYPT_MODE, secretKeySpec)

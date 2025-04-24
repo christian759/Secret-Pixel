@@ -23,9 +23,7 @@ fun homeScreen(navController: NavController){
         modifier = Modifier.fillMaxSize()
             .background(colorScheme.backgroundColor),
     ){
-
         Column{
-
             Row(Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically) {
@@ -98,7 +96,7 @@ fun FeatureCard(
             Image(
                 painter = painterResource(id = imageRes),
                 contentDescription = "feature icon",
-                modifier = Modifier.size(90.dp)
+                modifier = Modifier.size(100.dp)
             )
         }
     }
