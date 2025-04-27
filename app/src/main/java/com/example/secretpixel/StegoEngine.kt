@@ -84,34 +84,43 @@ object StegoEngine {
     }
 
 
-    fun extractFile(context: Context, imageUri: Uri, key: String?) {
+    fun extractFile(context: Context, imageUri: Uri?, key: String?) {
         try {
-            val inputStream = context.contentResolver.openInputStream(imageUri)
-            val combinedData = inputStream?.readBytes()
+            if (imageUri != null) {
+                val inputStream = context.contentResolver.openInputStream(imageUri)
+                val combinedData = inputStream?.readBytes()
 
-            if (combinedData == null || combinedData.size < 8) {
-                Toast.makeText(context, "Corrupted image: No hidden data found", Toast.LENGTH_SHORT).show()
-                return
+                if (combinedData == null || combinedData.size < 8) {
+                    Toast.makeText(context, "Corrupted image: No hidden data found", Toast.LENGTH_SHORT).show()
+                    return
+                }
+
+                val fileSizeBytes = combinedData.takeLast(8).toByteArray()
+                val fileSize = ByteBuffer.wrap(fileSizeBytes).long
+
+                if (fileSize <= 0 || fileSize > combinedData.size - 8) {
+                    Toast.makeText(context, "Image doesn't contain any content", Toast.LENGTH_SHORT).show()
+                    return
+                }
+
+                val extractedData =
+                    combinedData.copyOfRange(combinedData.size - 8 - fileSize.toInt(), combinedData.size - 8)
+
+                val finalData = try {
+                    decryptData(extractedData, key)
+                } catch (_: Exception) {
+                    extractedData
+                }
+
+                val detectedFormat = detectFileFormat(finalData) ?: ".bin"
+                saveHiddenFile(context, finalData, detectedFormat)
+            }else{
+                Toast.makeText(context, "Please select an image", Toast.LENGTH_SHORT).show()
             }
-
-            val fileSizeBytes = combinedData.takeLast(8).toByteArray()
-            val fileSize = ByteBuffer.wrap(fileSizeBytes).long
-
-            if (fileSize <= 0 || fileSize > combinedData.size - 8) {
-                Toast.makeText(context, "Image doesn't contain any content", Toast.LENGTH_SHORT).show()
-                return
-            }
-
-            val extractedData = combinedData.copyOfRange(combinedData.size - 8 - fileSize.toInt(), combinedData.size - 8)
-
-            val finalData = try{ decryptData(extractedData, key) }catch(_: Exception){ extractedData }
-
-            val detectedFormat = detectFileFormat(finalData) ?: ".bin"
-            saveHiddenFile(context, finalData, detectedFormat)
-
         } catch (e: Exception) {
             Toast.makeText(context, "Error extracting content: ${e.message}", Toast.LENGTH_SHORT).show()
         }
+
     }
 
     fun detectFileFormat(data: ByteArray): String? {

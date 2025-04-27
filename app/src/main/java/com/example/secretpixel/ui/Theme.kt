@@ -1,6 +1,5 @@
 package com.example.secretpixel.ui
 
-
 import androidx.compose.ui.graphics.Color
 
 data class ColorTheme(val backgroundColor: Color, val textColor: Color, val cardColor: Color, val cardColor2: Color)
