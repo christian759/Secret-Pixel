@@ -14,8 +14,8 @@ fun SecretPixelApp() {
         composable("home"){ homeScreen(navController) }
         composable("hide_file") { hideFile(navController) }
         composable("extract_file") { extractFile(navController) }
-        composable("hide_text") { hideText() }
-        composable("extract_text") { extractText() }
+        composable("hide_text") { hideText(navController) }
+        composable("extract_text") { extractText(navController) }
         composable("info") { infoPage() }
     }
 }

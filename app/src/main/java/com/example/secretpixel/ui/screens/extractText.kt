@@ -1,6 +1,130 @@
 package com.example.secretpixel.ui.screens
 
-import androidx.compose.runtime.Composable
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.*
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.*
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.*
+import androidx.navigation.NavController
+import com.example.secretpixel.ui.colorScheme
+import com.example.secretpixel.R
+import com.example.secretpixel.StegoEngine
 
 @Composable
-fun extractText(){}
+fun extractText(navController: NavController) {
+
+    var coverImageUri by remember { mutableStateOf<Uri?>(null) }
+    var key by remember { mutableStateOf("") }
+    var extractedText by remember { mutableStateOf<String?>(null) }
+    val context = LocalContext.current
+
+    val pickImage = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
+        it?.let { uri -> coverImageUri = uri }
+    }
+
+    Box(modifier = Modifier.fillMaxSize().background(colorScheme.backgroundColor)) {
+        Column(
+            modifier = Modifier.fillMaxSize().padding(30.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Spacer(modifier = Modifier.height(40.dp))
+
+            Image(
+                painter = painterResource(R.drawable.hidefile2__2_), "secret pixel",
+                modifier = Modifier.width(200.dp)
+            )
+
+            Spacer(modifier = Modifier.height(40.dp))
+
+            FilePickerCard(
+                title = R.drawable.selectimage,
+                buttonLabel = "Choose Image with Hidden Text",
+                fileName = coverImageUri?.lastPathSegment ?: "No image selected",
+                icon = Icons.Default.Image,
+                onClick = { pickImage.launch("image/*") }
+            )
+
+            Spacer(modifier = Modifier.height(30.dp))
+
+            OutlinedTextField(
+                value = key,
+                onValueChange = { key = it },
+                label = { Text("Decryption Key (Optional)") },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(10.dp),
+                colors = TextFieldDefaults.colors(
+                    focusedTextColor = colorScheme.textColor,
+                    unfocusedTextColor = colorScheme.textColor.copy(alpha = 0.8f),
+                    cursorColor = colorScheme.textColor,
+                    focusedContainerColor = colorScheme.cardColor.copy(alpha = 0.05f),
+                    unfocusedContainerColor = colorScheme.cardColor.copy(alpha = 0.02f),
+                    focusedIndicatorColor = colorScheme.cardColor,
+                    unfocusedIndicatorColor = colorScheme.cardColor.copy(alpha = 0.3f),
+                    focusedLabelColor = colorScheme.textColor,
+                    unfocusedLabelColor = colorScheme.textColor.copy(alpha = 0.6f)
+                )
+            )
+
+            Spacer(modifier = Modifier.height(30.dp))
+
+            OutlinedButton(
+                modifier = Modifier.height(50.dp).width(120.dp),
+                shape = RoundedCornerShape(10.dp),
+                border = BorderStroke(2.dp, Color.White.copy(alpha = 0.25f)),
+                elevation = ButtonDefaults.buttonElevation(6.dp, 2.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = colorScheme.cardColor),
+                onClick = {
+                    extractedText = StegoEngine.extractText(context, coverImageUri, key)
+                }
+            ) {
+                Box(modifier = Modifier.fillMaxSize()) {
+                    Image(
+                        painter = painterResource(R.drawable.hidefile2__2_), "extract text button",
+                        modifier = Modifier.matchParentSize()
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            extractedText?.let {
+                Text(
+                    text = it,
+                    color = colorScheme.textColor,
+                    fontSize = 16.sp,
+                    modifier = Modifier.padding(20.dp)
+                )
+            }
+
+            Spacer(Modifier.weight(1f))
+        }
+
+        TextButton(
+            onClick = { navController.navigate("info") },
+            modifier = Modifier.align(Alignment.BottomCenter).padding(20.dp)
+        ) {
+            Icon(
+                Icons.Default.Info, contentDescription = "Info", tint = colorScheme.cardColor,
+                modifier = Modifier.padding(10.dp)
+            )
+            Text(
+                text = "Info",
+                color = colorScheme.textColor,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium
+            )
+        }
+    }
+}
