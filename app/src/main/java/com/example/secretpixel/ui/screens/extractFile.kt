@@ -15,6 +15,7 @@ import androidx.compose.ui.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 import androidx.navigation.NavController
@@ -58,7 +59,7 @@ fun extractFile(navController: NavController) {
             // Stego Image Picker
             FilePickerCard(
                 title = R.drawable.selectimage,
-                buttonLabel = "Choose Stego Image",
+                buttonLabel = "Choose a Stego Image",
                 fileName = stegoImageUri?.lastPathSegment ?: "No file selected",
                 icon = Icons.Default.Image,
                 onClick = { pickStegoImage.launch("image/*") }
@@ -104,7 +105,8 @@ fun extractFile(navController: NavController) {
                 }
             ) {
                 Box {
-                    Text("Extract File", color = colorScheme.textColor, fontSize = 20.sp)
+                    Text("Extract File", color = colorScheme.textColor, fontSize = 22.sp,
+                        fontWeight = FontWeight.Bold, modifier = Modifier.padding(2.dp))
                 }
             }
 

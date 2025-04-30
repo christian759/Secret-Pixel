@@ -246,7 +246,7 @@ object StegoEngine {
     }
 
     fun hideText(context: Context, imageUri: Uri?, text: String?, key: String?) {
-        if (imageUri != null && text != null) {
+        if (imageUri != null && !text.isNullOrEmpty()) {
             try {
                 // Read the image
                 val inputStream = context.contentResolver.openInputStream(imageUri)
@@ -380,6 +380,7 @@ object StegoEngine {
                     textBytes
                 }
 
+                Toast.makeText(context, "Text extracted successfully", Toast.LENGTH_SHORT).show()
                 return String(finalBytes, Charsets.UTF_8)
 
             } catch (e: Exception) {

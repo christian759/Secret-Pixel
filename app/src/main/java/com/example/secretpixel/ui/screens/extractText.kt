@@ -14,6 +14,7 @@ import androidx.compose.ui.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 import androidx.navigation.NavController
@@ -50,7 +51,7 @@ fun extractText(navController: NavController) {
 
             FilePickerCard(
                 title = R.drawable.selectimage,
-                buttonLabel = "Choose Image with Hidden Text",
+                buttonLabel = "Choose a Stego Image",
                 fileName = coverImageUri?.lastPathSegment ?: "No image selected",
                 icon = Icons.Default.Image,
                 onClick = { pickImage.launch("image/*") }
@@ -89,7 +90,8 @@ fun extractText(navController: NavController) {
                 }
             ) {
                 Box {
-                    Text("Extract Text", color = colorScheme.textColor, fontSize = 20.sp)
+                    Text("Extract Text", color = colorScheme.textColor, fontSize = 22.sp,
+                        fontWeight = FontWeight.Bold, modifier = Modifier.padding(2.dp))
                 }
             }
 
@@ -97,7 +99,7 @@ fun extractText(navController: NavController) {
 
             extractedText?.let {
                 Text(
-                    text = it,
+                    text = "Extracted text: $it",
                     color = colorScheme.textColor,
                     fontSize = 16.sp,
                     modifier = Modifier.padding(20.dp)

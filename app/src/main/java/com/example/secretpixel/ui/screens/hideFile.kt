@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
@@ -61,7 +62,7 @@ fun hideFile(navController: NavController) {
             // Image Picker
             FilePickerCard(
                 title = R.drawable.selectimage,
-                buttonLabel = "Choose Cover Image",
+                buttonLabel = "Choose an Image",
                 fileName = coverImageUri?.lastPathSegment ?: "No file selected",
                 icon = Icons.Default.Image,
                 onClick = { pickImage.launch("image/*") }
@@ -72,7 +73,7 @@ fun hideFile(navController: NavController) {
             // File Picker
             FilePickerCard(
                 title = R.drawable.selectfile,
-                buttonLabel = "Choose File",
+                buttonLabel = "Pick a File",
                 fileName = fileToHideUri?.lastPathSegment ?: "No file selected",
                 icon = Icons.Default.AttachFile,
                 onClick = { pickFile.launch("*/*") }
@@ -114,7 +115,8 @@ fun hideFile(navController: NavController) {
                }
             ) {
                 Box{
-                    Text("Hide File", color = colorScheme.textColor, fontSize = 20.sp)
+                    Text("Hide File", color = colorScheme.textColor, fontSize = 22.sp,
+                        fontWeight = FontWeight.Bold, modifier = Modifier.padding(2.dp))
                 }
             }
 
