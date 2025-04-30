@@ -42,8 +42,8 @@ fun extractText(navController: NavController) {
             Spacer(modifier = Modifier.height(40.dp))
 
             Image(
-                painter = painterResource(R.drawable.hidefile2__2_), "secret pixel",
-                modifier = Modifier.width(200.dp)
+                painter = painterResource(R.drawable.extract_text2), "secret pixel",
+                modifier = Modifier.width(300.dp)
             )
 
             Spacer(modifier = Modifier.height(40.dp))
@@ -80,7 +80,6 @@ fun extractText(navController: NavController) {
             Spacer(modifier = Modifier.height(30.dp))
 
             OutlinedButton(
-                modifier = Modifier.height(50.dp).width(120.dp),
                 shape = RoundedCornerShape(10.dp),
                 border = BorderStroke(2.dp, Color.White.copy(alpha = 0.25f)),
                 elevation = ButtonDefaults.buttonElevation(6.dp, 2.dp),
@@ -89,11 +88,8 @@ fun extractText(navController: NavController) {
                     extractedText = StegoEngine.extractText(context, coverImageUri, key)
                 }
             ) {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    Image(
-                        painter = painterResource(R.drawable.hidefile2__2_), "extract text button",
-                        modifier = Modifier.matchParentSize()
-                    )
+                Box {
+                    Text("Extract Text", color = colorScheme.textColor, fontSize = 20.sp)
                 }
             }
 

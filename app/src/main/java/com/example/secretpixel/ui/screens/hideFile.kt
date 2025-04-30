@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 import androidx.navigation.NavController
@@ -103,7 +104,6 @@ fun hideFile(navController: NavController) {
             Spacer(modifier = Modifier.height(30.dp))
 
             OutlinedButton(
-                modifier = Modifier.height(50.dp).width(120.dp),
                 shape = RoundedCornerShape(10.dp),
                 border = BorderStroke(2.dp, Color.White.copy(alpha = 0.25f)),
                 elevation = ButtonDefaults.buttonElevation(6.dp, 2.dp),
@@ -113,11 +113,8 @@ fun hideFile(navController: NavController) {
                     StegoEngine.hideFile(context, coverImageUri, fileToHideUri, key)
                }
             ) {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    Image(
-                        painter = painterResource(R.drawable.hidefile2__2_), "hide file button",
-                        modifier = Modifier.matchParentSize()
-                    )
+                Box{
+                    Text("Hide File", color = colorScheme.textColor, fontSize = 20.sp)
                 }
             }
 

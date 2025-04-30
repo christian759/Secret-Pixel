@@ -48,7 +48,7 @@ fun extractFile(navController: NavController) {
             Spacer(modifier = Modifier.height(40.dp))
 
             Image(
-                painter = painterResource(R.drawable.extractfile2), // replace with your actual drawable
+                painter = painterResource(R.drawable.extract_file2), // replace with your actual drawable
                 contentDescription = "Secret Pixel",
                 modifier = Modifier.width(400.dp)
             )
@@ -90,7 +90,6 @@ fun extractFile(navController: NavController) {
             Spacer(modifier = Modifier.height(30.dp))
 
             OutlinedButton(
-                modifier = Modifier.height(50.dp).width(120.dp),
                 shape = RoundedCornerShape(10.dp),
                 border = BorderStroke(2.dp, Color.White.copy(alpha = 0.25f)),
                 elevation = ButtonDefaults.buttonElevation(6.dp, 2.dp),
@@ -104,12 +103,8 @@ fun extractFile(navController: NavController) {
                     StegoEngine.extractFile(context, stegoImageUri, key)
                 }
             ) {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    Image(
-                        painter = painterResource(R.drawable.selectimage), // reuse or change drawable
-                        contentDescription = "Extract file button",
-                        modifier = Modifier.matchParentSize()
-                    )
+                Box {
+                    Text("Extract File", color = colorScheme.textColor, fontSize = 20.sp)
                 }
             }
 

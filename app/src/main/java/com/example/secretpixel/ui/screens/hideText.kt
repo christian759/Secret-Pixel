@@ -42,7 +42,7 @@ fun hideText(navController: NavController) {
             Spacer(modifier = Modifier.height(40.dp))
 
             Image(
-                painter = painterResource(R.drawable.hidefile2__2_), "secret pixel",
+                painter = painterResource(R.drawable.hidetext2), "secret pixel",
                 modifier = Modifier.width(200.dp)
             )
 
@@ -101,7 +101,6 @@ fun hideText(navController: NavController) {
             Spacer(modifier = Modifier.height(30.dp))
 
             OutlinedButton(
-                modifier = Modifier.height(50.dp).width(120.dp),
                 shape = RoundedCornerShape(10.dp),
                 border = BorderStroke(2.dp, Color.White.copy(alpha = 0.25f)),
                 elevation = ButtonDefaults.buttonElevation(6.dp, 2.dp),
@@ -110,11 +109,8 @@ fun hideText(navController: NavController) {
                     StegoEngine.hideText(context, coverImageUri, textToHide, key)
                 }
             ) {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    Image(
-                        painter = painterResource(R.drawable.hidefile2__2_), "hide text button",
-                        modifier = Modifier.matchParentSize()
-                    )
+                Box {
+                    Text("Hide Text", color = colorScheme.textColor, fontSize = 20.sp)
                 }
             }
 

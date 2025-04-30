@@ -14,7 +14,6 @@ import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.nio.ByteBuffer
 import javax.crypto.Cipher
-import javax.crypto.SecretKey
 import javax.crypto.spec.SecretKeySpec
 
 object StegoEngine {
@@ -63,6 +62,8 @@ object StegoEngine {
                             outputStream.write(combinedData)
                         }
                     }
+                    Toast.makeText(context, "File hidden successfully", Toast.LENGTH_SHORT).show()
+
                 } catch (_: Exception) {
                     Handler(Looper.getMainLooper()).post {
                         Toast.makeText(context, "Error hiding content", Toast.LENGTH_SHORT).show()
@@ -129,25 +130,90 @@ object StegoEngine {
     }
 
     fun detectFileFormat(data: ByteArray): String? {
-        fun ByteArray.startsWith(prefix: ByteArray): Boolean {
-            if (this.size < prefix.size) return false
-            return this.sliceArray(0 until prefix.size).contentEquals(prefix)
+        // Helper to check magic at offset 0
+        fun ByteArray.startsWith(prefix: ByteArray, offset: Int = 0): Boolean {
+            if (this.size < offset + prefix.size) return false
+            return this.sliceArray(offset until (offset + prefix.size)).contentEquals(prefix)
         }
 
         return when {
-            data.startsWith(byteArrayOf(0xFF.toByte(), 0xD8.toByte(), 0xFF.toByte())) -> ".jpg"
-            data.startsWith(byteArrayOf(0x89.toByte(), 0x50.toByte(), 0x4E.toByte(), 0x47.toByte())) -> ".png"
-            data.startsWith(byteArrayOf(0x25.toByte(), 0x50.toByte(), 0x44.toByte(), 0x46.toByte())) -> ".pdf"
-            data.startsWith(byteArrayOf(0x50.toByte(), 0x4B.toByte(), 0x03.toByte(), 0x04.toByte())) -> ".zip"
-            data.startsWith(byteArrayOf(0x49, 0x44, 0x33)) -> ".mp3" // MP3
-            data.startsWith(byteArrayOf(0x52, 0x49, 0x46, 0x46)) -> ".wav" // WAV
-            data.startsWith(byteArrayOf(0x00, 0x00, 0x01, 0xBA.toByte())) -> ".mpg" // MPEG Video
-            data.startsWith(byteArrayOf(0x00, 0x00, 0x01, 0xB3.toByte())) -> ".mpg"
-            data.startsWith(byteArrayOf(0x66, 0x74, 0x79, 0x70)) -> ".mp4" // MP4
-            data.startsWith(byteArrayOf(0x52, 0x49, 0x46, 0x46, 0xE2.toByte(), 0x28, 0xD3.toByte(), 0x11)) -> ".avi" // AVI
+            // JPEG: FF D8 FF
+            data.startsWith(byteArrayOf(0xFF.toByte(), 0xD8.toByte(), 0xFF.toByte())) ->
+                ".jpg"
+
+            // PNG: 89 50 4E 47 0D 0A 1A 0A
+            data.startsWith(byteArrayOf(
+                0x89.toByte(), 0x50, 0x4E, 0x47,
+                0x0D, 0x0A, 0x1A, 0x0A
+            )) ->
+                ".png"
+
+            // GIF87a / GIF89a
+            data.startsWith("GIF87a".toByteArray()) ||
+                    data.startsWith("GIF89a".toByteArray()) ->
+                ".gif"
+
+            // PDF: 25 50 44 46 ("%PDF")
+            data.startsWith(byteArrayOf(0x25.toByte(), 0x50, 0x44, 0x46)) ->
+                ".pdf"
+
+            // ZIP (incl. docx, xlsx, jar, apk…)
+            data.startsWith(byteArrayOf(0x50, 0x4B, 0x03, 0x04)) ->
+                ".zip"
+
+            // MP3, ID3v2 tag: "ID3"
+            data.startsWith("ID3".toByteArray()) ->
+                ".mp3"
+
+            // MP3, MPEG Audio Frame: FF Ex where E = 0xE0 bits set
+            data.size >= 2 &&
+                    (data[0].toInt() and 0xFF) == 0xFF &&
+                    (data[1].toInt() and 0xE0) == 0xE0 ->
+                ".mp3"
+
+            // WAV: RIFF …. WAVE
+            data.startsWith("RIFF".toByteArray()) &&
+                    data.size >= 12 &&
+                    data.sliceArray(8 until 12).contentEquals("WAVE".toByteArray()) ->
+                ".wav"
+
+            // MPEG (Program stream) .mpg/.mpeg : 00 00 01 BA or 00 00 01 B3
+            data.startsWith(byteArrayOf(0x00, 0x00, 0x01, 0xBA.toByte())) ||
+                    data.startsWith(byteArrayOf(0x00, 0x00, 0x01, 0xB3.toByte())) ->
+                ".mpg"
+
+            // MP4 / MOV / 3GP family: ftyp at offset 4, then brand (isom, mp42, etc.)
+            data.size >= 12 &&
+                    data.startsWith(byteArrayOf(0x00, 0x00, 0x00), offset = 0) &&
+                    data.startsWith("ftyp".toByteArray(), offset = 4) -> {
+                // check brand
+                val brand = data.sliceArray(8 until 12).toString(Charsets.US_ASCII)
+                when (brand) {
+                    "mp42", "isom", "M4A ", "M4V " -> ".mp4"
+                    "qt  " -> ".mov"
+                    "3gp4", "3gp5"         -> ".3gp"
+                    else                   -> ".mp4"
+                }
+            }
+
+            // AVI: RIFF …. AVI
+            data.startsWith("RIFF".toByteArray()) &&
+                    data.size >= 12 &&
+                    data.sliceArray(8 until 12).contentEquals("AVI ".toByteArray()) ->
+                ".avi"
+
+            // MKV/WebM: EBML header 1A 45 DF A3
+            data.startsWith(byteArrayOf(0x1A, 0x45.toByte(), 0xDF.toByte(), 0xA3.toByte())) ->
+                ".mkv"
+
+            // FLV: "FLV"  46 4C 56 01
+            data.startsWith("FLV".toByteArray()) ->
+                ".flv"
+
             else -> null
         }
     }
+
 
 
     fun saveHiddenFile(context: Context, fileData: ByteArray, format: String) {
