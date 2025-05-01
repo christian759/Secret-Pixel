@@ -70,7 +70,7 @@ object StegoEngine {
                     }
                 }
             }catch (e: Exception){
-                Toast.makeText(context, "Error ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "An error occurred", Toast.LENGTH_SHORT).show()
             }
         }else {
             if ((imageUri == null) && (fileUri == null))
@@ -128,7 +128,7 @@ object StegoEngine {
                 Toast.makeText(context, "Please select an image", Toast.LENGTH_SHORT).show()
             }
         } catch (e: Exception) {
-            Toast.makeText(context, "Error extracting content: ${e.message}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "An error occurred while extracting file", Toast.LENGTH_SHORT).show()
         }
 
     }
@@ -242,7 +242,7 @@ object StegoEngine {
 
         } catch (e: Exception) {
             Handler(Looper.getMainLooper()).post {
-                Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Error: Unable to save file", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -315,7 +315,7 @@ object StegoEngine {
                 Toast.makeText(context, "Text hidden successfully", Toast.LENGTH_SHORT).show()
 
             } catch (e: Exception) {
-                Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "An error occurred white hiding text", Toast.LENGTH_SHORT).show()
             }
         } else {
             if ((imageUri != null && !text.isNullOrEmpty()))
@@ -390,7 +390,7 @@ object StegoEngine {
                 return String(finalBytes, Charsets.UTF_8)
 
             } catch (e: Exception) {
-                Toast.makeText(context, "Error extracting text: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "An error occurred while hiding text", Toast.LENGTH_SHORT).show()
                 return null
             }
         } else {

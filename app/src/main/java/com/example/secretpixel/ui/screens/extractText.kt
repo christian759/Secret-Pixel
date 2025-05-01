@@ -1,19 +1,23 @@
 package com.example.secretpixel.ui.screens
 
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
@@ -29,6 +33,7 @@ fun extractText(navController: NavController) {
     var key by remember { mutableStateOf("") }
     var extractedText by remember { mutableStateOf<String?>(null) }
     val context = LocalContext.current
+    val clipboardManager = LocalClipboardManager.current
 
     val pickImage = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
         it?.let { uri -> coverImageUri = uri }
@@ -98,12 +103,27 @@ fun extractText(navController: NavController) {
             Spacer(modifier = Modifier.height(20.dp))
 
             extractedText?.let {
-                Text(
-                    text = "Extracted text: $it",
-                    color = colorScheme.textColor,
-                    fontSize = 16.sp,
-                    modifier = Modifier.padding(20.dp)
-                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    SelectionContainer {
+                        Text(
+                            text = "Extracted text: $it",
+                            color = colorScheme.textColor,
+                            fontSize = 16.sp,
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                    IconButton(onClick = {
+                        clipboardManager.setText(AnnotatedString(it))
+                        Toast.makeText(context, "Copied to clipboard", Toast.LENGTH_SHORT).show()
+                    }) {
+                        Icon(Icons.Default.ContentCopy, contentDescription = "Copy", tint = colorScheme.textColor)
+                    }
+                }
             }
 
             Spacer(Modifier.weight(1f))
