@@ -145,6 +145,39 @@ fun infoPage(navController: NavController) {
             Spacer(modifier = Modifier.height(20.dp))
 
             Text(
+                text = "🔐 Security Policy",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = colorScheme.textColor
+            )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            val securityPoints = listOf(
+                "All file and text operations happen 100% offline, on your device only.",
+                "No files, images, or personal data are uploaded to any server.",
+                "Files and text can be encrypted with AES-256 before embedding.",
+                "Decryption keys are never stored or transmitted.",
+                "Temporary data is cleared automatically after operations.",
+                "No permissions are requested beyond what is needed for file access.",
+                "Your privacy and control are our top priorities."
+            )
+
+            securityPoints.forEach {
+                Text(
+                    text = "• $it",
+                    fontSize = 14.sp,
+                    color = colorScheme.textColor.copy(alpha = 0.85f),
+                    modifier = Modifier.padding(vertical = 2.dp)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(40.dp))
+
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Text(
                 text = "Built with ❤️ by Secret Pixel Team",
                 fontSize = 13.sp,
                 color = colorScheme.textColor.copy(alpha = 0.6f)
