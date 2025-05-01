@@ -72,8 +72,13 @@ object StegoEngine {
             }catch (e: Exception){
                 Toast.makeText(context, "Error ${e.message}", Toast.LENGTH_SHORT).show()
             }
-        }else{
-            Toast.makeText(context, "Please select a file and an image", Toast.LENGTH_SHORT).show()
+        }else {
+            if ((imageUri == null) && (fileUri == null))
+                Toast.makeText(context, "Please select a file and an image", Toast.LENGTH_SHORT).show()
+            if (imageUri != null)
+                Toast.makeText(context, "Please select an image", Toast.LENGTH_SHORT).show()
+            if (fileUri != null)
+                Toast.makeText(context, "Please select a fill", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -88,7 +93,6 @@ object StegoEngine {
         }
         return data
     }
-
 
     fun extractFile(context: Context, imageUri: Uri?, key: String?) {
         try {
@@ -214,8 +218,6 @@ object StegoEngine {
         }
     }
 
-
-
     fun saveHiddenFile(context: Context, fileData: ByteArray, format: String) {
         try {
             val fileName = "hidden_file_${System.currentTimeMillis()}$format"
@@ -316,10 +318,14 @@ object StegoEngine {
                 Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         } else {
-            Toast.makeText(context, "Please select an image and provide text", Toast.LENGTH_SHORT).show()
+            if ((imageUri != null && !text.isNullOrEmpty()))
+                Toast.makeText(context, "Please select an image and provide text", Toast.LENGTH_SHORT).show()
+            if (imageUri != null)
+                Toast.makeText(context, "Please enter a text to hide", Toast.LENGTH_SHORT).show()
+            if (text.isNullOrEmpty())
+                Toast.makeText(context, "Please select an image", Toast.LENGTH_SHORT).show()
         }
     }
-
 
     fun extractText(context: Context, imageUri: Uri?, key: String?): String? {
         if (imageUri != null) {
@@ -392,8 +398,6 @@ object StegoEngine {
             return null
         }
     }
-
-
 
     fun decryptData(data: ByteArray, key: String?): ByteArray {
         if (key != null) {
