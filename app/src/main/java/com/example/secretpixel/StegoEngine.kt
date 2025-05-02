@@ -74,11 +74,11 @@ object StegoEngine {
             }
         }else {
             if ((imageUri == null) && (fileUri == null))
-                Toast.makeText(context, "Please select a file and an image", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Please select a cover image and a file", Toast.LENGTH_SHORT).show()
             if (imageUri != null)
                 Toast.makeText(context, "Please select a file", Toast.LENGTH_SHORT).show()
             if (fileUri != null)
-                Toast.makeText(context, "Please select an image", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Please select a cover image", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -125,7 +125,7 @@ object StegoEngine {
                 val detectedFormat = detectFileFormat(finalData) ?: ".bin"
                 saveHiddenFile(context, finalData, detectedFormat)
             }else{
-                Toast.makeText(context, "Please select an image", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Please select a Stego image", Toast.LENGTH_SHORT).show()
             }
         } catch (e: Exception) {
             Toast.makeText(context, "An error occurred while extracting file", Toast.LENGTH_SHORT).show()
@@ -319,11 +319,11 @@ object StegoEngine {
             }
         } else {
             if ((imageUri == null && text.isNullOrEmpty()))
-                Toast.makeText(context, "Please select an image and provide text", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Please select a cover image and provide text", Toast.LENGTH_SHORT).show()
             if (imageUri == null)
                 Toast.makeText(context, "Please enter a text to hide", Toast.LENGTH_SHORT).show()
             if (text.isNullOrEmpty())
-                Toast.makeText(context, "Please select an image", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Please select a cover image", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -394,7 +394,7 @@ object StegoEngine {
                 return null
             }
         } else {
-            Toast.makeText(context, "Please select an image", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Please select a Stego image", Toast.LENGTH_SHORT).show()
             return null
         }
     }
