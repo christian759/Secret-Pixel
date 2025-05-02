@@ -76,9 +76,9 @@ object StegoEngine {
             if ((imageUri == null) && (fileUri == null))
                 Toast.makeText(context, "Please select a file and an image", Toast.LENGTH_SHORT).show()
             if (imageUri != null)
-                Toast.makeText(context, "Please select an image", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Please select a file", Toast.LENGTH_SHORT).show()
             if (fileUri != null)
-                Toast.makeText(context, "Please select a fill", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Please select an image", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -318,9 +318,9 @@ object StegoEngine {
                 Toast.makeText(context, "An error occurred white hiding text", Toast.LENGTH_SHORT).show()
             }
         } else {
-            if ((imageUri != null && !text.isNullOrEmpty()))
+            if ((imageUri == null && text.isNullOrEmpty()))
                 Toast.makeText(context, "Please select an image and provide text", Toast.LENGTH_SHORT).show()
-            if (imageUri != null)
+            if (imageUri == null)
                 Toast.makeText(context, "Please enter a text to hide", Toast.LENGTH_SHORT).show()
             if (text.isNullOrEmpty())
                 Toast.makeText(context, "Please select an image", Toast.LENGTH_SHORT).show()
