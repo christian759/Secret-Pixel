@@ -321,9 +321,9 @@ object StegoEngine {
             if ((imageUri == null && text.isNullOrEmpty()))
                 Toast.makeText(context, "Please select a cover image and provide text", Toast.LENGTH_SHORT).show()
             if (imageUri == null)
-                Toast.makeText(context, "Please enter a text to hide", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Please select an image to hide", Toast.LENGTH_SHORT).show()
             if (text.isNullOrEmpty())
-                Toast.makeText(context, "Please select a cover image", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Please enter a text to hide", Toast.LENGTH_SHORT).show()
         }
     }
 

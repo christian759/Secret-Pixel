@@ -176,7 +176,11 @@ fun FilePickerCard(
                 Text(buttonLabel, color = colorScheme.textColor)
             }
             Spacer(Modifier.height(8.dp))
-            Text("Selected: $fileName", fontSize = 12.sp, color = colorScheme.textColor.copy(alpha = 0.7f))
+            if (fileName == "No file selected" || fileName == "No image selected") {
+                Text("Selected: No File Selected", fontSize = 12.sp, color = Color.Red.copy(0.5f))
+            }else{
+                Text("Selected: $fileName", fontSize = 12.sp, color = colorScheme.textColor.copy(alpha = 0.7f))
+            }
         }
     }
 }

@@ -22,7 +22,6 @@ import androidx.navigation.NavController
 import com.example.secretpixel.ui.colorScheme
 import com.example.secretpixel.R
 import com.example.secretpixel.StegoEngine
-
 @Composable
 fun extractFile(navController: NavController) {
 
