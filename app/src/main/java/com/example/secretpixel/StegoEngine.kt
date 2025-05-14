@@ -75,9 +75,9 @@ object StegoEngine {
         }else {
             if ((imageUri == null) && (fileUri == null))
                 Toast.makeText(context, "Please select a cover image and a file", Toast.LENGTH_SHORT).show()
-            if (imageUri != null)
+           else if (imageUri != null)
                 Toast.makeText(context, "Please select a file", Toast.LENGTH_SHORT).show()
-            if (fileUri != null)
+            else if (fileUri != null)
                 Toast.makeText(context, "Please select a cover image", Toast.LENGTH_SHORT).show()
         }
     }
@@ -320,9 +320,9 @@ object StegoEngine {
         } else {
             if ((imageUri == null && text.isNullOrEmpty()))
                 Toast.makeText(context, "Please select a cover image and provide text", Toast.LENGTH_SHORT).show()
-            if (imageUri == null)
+            else if (imageUri == null)
                 Toast.makeText(context, "Please select an image to hide", Toast.LENGTH_SHORT).show()
-            if (text.isNullOrEmpty())
+            else if (text.isNullOrEmpty())
                 Toast.makeText(context, "Please enter a text to hide", Toast.LENGTH_SHORT).show()
         }
     }

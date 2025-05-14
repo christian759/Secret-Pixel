@@ -15,9 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.*
 import androidx.compose.ui.unit.*
 import androidx.navigation.NavController
 import com.example.secretpixel.ui.colorScheme
@@ -177,7 +175,7 @@ fun FilePickerCard(
             }
             Spacer(Modifier.height(8.dp))
             if (fileName == "No file selected" || fileName == "No image selected") {
-                Text("Selected: No File Selected", fontSize = 12.sp, color = Color.Red.copy(0.5f))
+                Text("Selected: $fileName", fontSize = 12.sp, color = Color.Red.copy(0.5f))
             }else{
                 Text("Selected: $fileName", fontSize = 12.sp, color = colorScheme.textColor.copy(alpha = 0.7f))
             }
