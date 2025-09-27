@@ -49,7 +49,7 @@ object StegoEngine {
 
                 // saving the image
                 val values = ContentValues().apply {
-                    put(MediaStore.Images.Media.DISPLAY_NAME, "love.png")
+                    put(MediaStore.Images.Media.DISPLAY_NAME, "secret_image.png")
                     put(MediaStore.Images.Media.MIME_TYPE, "image/png")
                     put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
                 }
