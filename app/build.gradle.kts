@@ -6,31 +6,55 @@ plugins {
 
 android {
     namespace = "com.example.secretpixel"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.secretpixel"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    // 🧩 Signing configuration
+    signingConfigs {
+        create("release") {
+            // points to your keystore in the root project folder
+            storeFile =  file("/home/c2/Secret-Pixel/key_store")
+            storePassword = "123456"  // 🔒 replace this
+            keyAlias = "key0"
+            keyPassword = "123456"      // 🔒 replace this
+        }
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+
+            // 👇 use the signing configuration above
+            signingConfig = signingConfigs.getByName("release")
+        }
+
+        debug {
+            // Optional: sign debug builds too (can reuse same keystore)
+            signingConfig = signingConfigs.getByName("release")
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     kotlinOptions {
         jvmTarget = "11"
     }
+
     buildFeatures {
         compose = true
     }
