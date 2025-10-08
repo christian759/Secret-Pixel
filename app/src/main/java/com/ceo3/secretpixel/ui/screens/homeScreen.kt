@@ -13,7 +13,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 import androidx.navigation.NavController
-import com.example.secretpixel.R
+import com.ceo3.secretpixel.R
 import com.ceo3.secretpixel.ui.colorScheme
 
 @Composable

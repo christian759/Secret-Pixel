@@ -22,7 +22,7 @@ import androidx.compose.ui.text.font.*
 import androidx.compose.ui.unit.*
 import androidx.navigation.NavController
 import com.ceo3.secretpixel.ui.colorScheme
-import com.example.secretpixel.R
+import com.ceo3.secretpixel.R
 import com.ceo3.secretpixel.StegoEngine
 
 @Composable
