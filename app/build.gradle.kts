@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.secretpixel"
+    namespace = "com.ceo3.secretpixel"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.secretpixel"
+        applicationId = "com.ceo3.secretpixel"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
